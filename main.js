@@ -71,7 +71,7 @@ const COUNTRY_CONFIG = {
 
 let currentNewsIndex = 0;
 let currentNewsCountry = 'US';
-let currentVisionIndex = 2; // Pet
+let currentVisionIndex = 0; // Clock (synced with HTML .active)
 
 // State
 let isNightMode = false;
@@ -87,27 +87,47 @@ const VISION_VIEWS = [
     { id: 'pet', title: 'CORE SYSTEM' }
 ];
 
-// --- Initialization ---
+// --- Initialization (Robust) ---
 document.addEventListener('DOMContentLoaded', () => {
+    console.log("[INIT] DOMContentLoaded fired");
     setupMobileViewport();
 
-    // Components
-    const matrixRain = new MatrixRain('matrix-canvas');
-    window.matrixRain = matrixRain;
+    // Components - Wrapped in Try/Catch to prevent cascading failures
+    try {
+        const matrixRain = new MatrixRain('matrix-canvas');
+        window.matrixRain = matrixRain;
+    } catch (e) {
+        console.error('FAILED to init MatrixRain:', e);
+    }
 
-    // Default video
-    const initialVideo = localStorage.getItem('youtubeInitialVideo') || 'PLhGipfv0juZXQwciXts3t3RWZyIzDBgOt';
-    new YouTubePlayer('youtube-player', initialVideo);
+    try {
+        const initialVideo = localStorage.getItem('youtubeInitialVideo') || 'PLhGipfv0juZXQwciXts3t3RWZyIzDBgOt';
+        new YouTubePlayer('youtube-player', initialVideo);
+    } catch (e) {
+        console.error('FAILED to init YouTubePlayer:', e);
+    }
 
-    const character = new Character3D('character-3d');
-    window.character3D = character;
+    try {
+        const character = new Character3D('character-3d');
+        window.character3D = character;
+    } catch (e) {
+        console.error('FAILED to init Character3D:', e);
+    }
 
     // Load Settings
-    loadSettings();
+    try {
+        loadSettings();
+    } catch (e) {
+        console.error('FAILED to loadSettings:', e);
+    }
 
     // Start Loops
-    updateClock();
-    setInterval(updateClock, 1000);
+    try {
+        updateClock();
+        setInterval(updateClock, 1000);
+    } catch (e) {
+        console.error('FAILED to start Clock:', e);
+    }
 
     fetchWeather();
     fetchNews();
@@ -115,21 +135,45 @@ document.addEventListener('DOMContentLoaded', () => {
     renderCalendar();
 
     // UI Setups
-    setupTickerInteraction();
-    setupNewsNavigation();
-    setupNewsFullscreen();
-    setupBedtime();
-    setupVisionNavigation();
-    setupPetFullscreen();
-    setupYoutubeFullscreen();
-    setupWelcomeScreen();
-    setupSettings();
+    console.log("[INIT] Starting UI Setups");
+    const safeSetup = (fn, name) => {
+        try {
+            console.log(`[INIT] Running safeSetup: ${name}`);
+            fn();
+            console.log(`[INIT] Completed safeSetup: ${name}`);
+        } catch (e) { console.error(`FAILED setup: ${name}`, e); }
+    };
+
+    safeSetup(setupTickerInteraction, 'Ticker');
+    safeSetup(setupNewsNavigation, 'NewsNav');
+    safeSetup(setupNewsFullscreen, 'NewsFS');
+    safeSetup(setupBedtime, 'Bedtime');
+    safeSetup(setupVisionNavigation, 'VisionNav');
+    safeSetup(setupPetFullscreen, 'PetFS');
+    safeSetup(setupYoutubeFullscreen, 'YoutubeFS');
+    safeSetup(setupWelcomeScreen, 'Welcome');
+    safeSetup(setupSettings, 'Settings');
 
     // Clocks
-    const matrixClock = new MatrixClock('matrix-clock-canvas');
-    window.matrixClock = matrixClock;
-    const miniMatrixClock = new MiniMatrixClock('mini-clock-canvas');
-    window.miniMatrixClock = miniMatrixClock;
+    console.log("[INIT] Initializing Clocks");
+    try {
+        console.log("[INIT] Creating MatrixClock...");
+        const matrixClock = new MatrixClock('matrix-clock-canvas');
+        window.matrixClock = matrixClock;
+        console.log("[INIT] MatrixClock created successfully");
+    } catch (e) {
+        console.error('FAILED to init MatrixClock:', e);
+    }
+
+    try {
+        console.log("[INIT] Creating MiniMatrixClock...");
+        const miniMatrixClock = new MiniMatrixClock('mini-clock-canvas');
+        window.miniMatrixClock = miniMatrixClock;
+        console.log("[INIT] MiniMatrixClock created successfully");
+    } catch (e) {
+        console.error('FAILED to init MiniMatrixClock:', e);
+    }
+    console.log("[INIT] Initialization complete");
 
     // Periodic Refreshes
     setInterval(fetchWeather, 60000 * 30);
@@ -149,14 +193,16 @@ function updateClock() {
     try { timeStr = now.toLocaleTimeString('en-US', timeOptions); }
     catch (e) { timeStr = now.toLocaleTimeString('en-US'); }
 
-    document.getElementById('clock').textContent = timeStr;
+    const clockEl = document.getElementById('clock');
+    if (clockEl) clockEl.textContent = timeStr;
 
     const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', timeZone: currentLocationTimeZone !== 'auto' ? currentLocationTimeZone : undefined };
     let dateStr;
     try { dateStr = now.toLocaleDateString('en-US', dateOptions); }
     catch (e) { dateStr = now.toLocaleDateString('en-US'); }
 
-    document.getElementById('date').textContent = dateStr;
+    const dateEl = document.getElementById('date');
+    if (dateEl) dateEl.textContent = dateStr;
 
     const fsClock = document.getElementById('news-fullscreen-clock');
     if (fsClock) fsClock.textContent = timeStr;
@@ -184,28 +230,32 @@ async function fetchWeather() {
         // Update UI
         const info = getWeatherCodeInfo(code);
         const currentEl = document.getElementById('weather-current');
-        currentEl.innerHTML = `
-            <span class="temp">${currentTemp}°C</span>
-            <span class="condition">${info.icon} ${info.text}</span>
-            <span class="wind">💨 ${Math.round(windSpeed)} km/h</span>
-            <span class="location">${CONFIG.LOCATION_NAME}</span>
-        `;
+        if (currentEl) {
+            currentEl.innerHTML = `
+                <span class="temp">${currentTemp}°C</span>
+                <span class="condition">${info.icon} ${info.text}</span>
+                <span class="wind">💨 ${Math.round(windSpeed)} km/h</span>
+                <span class="location">${CONFIG.LOCATION_NAME}</span>
+            `;
+        }
 
         // Forecast
         const forecastEl = document.getElementById('weather-forecast');
-        forecastEl.innerHTML = '';
-        for (let i = 1; i <= 3; i++) {
-            const min = Math.round(data.daily.temperature_2m_min[i]);
-            const max = Math.round(data.daily.temperature_2m_max[i]);
-            const fCode = data.daily.weather_code[i];
-            const fInfo = getWeatherCodeInfo(fCode);
-            const date = new Date(data.daily.time[i]);
-            const dayName = date.toLocaleDateString('en-US', { weekday: 'short' }).slice(0, 3).toUpperCase();
+        if (forecastEl) {
+            forecastEl.innerHTML = '';
+            for (let i = 1; i <= 3; i++) {
+                const min = Math.round(data.daily.temperature_2m_min[i]);
+                const max = Math.round(data.daily.temperature_2m_max[i]);
+                const fCode = data.daily.weather_code[i];
+                const fInfo = getWeatherCodeInfo(fCode);
+                const date = new Date(data.daily.time[i]);
+                const dayName = date.toLocaleDateString('en-US', { weekday: 'short' }).slice(0, 3).toUpperCase();
 
-            const div = document.createElement('div');
-            div.className = 'forecast-item';
-            div.innerHTML = `<span class="day">${dayName}</span><span class="icon">${fInfo.icon}</span><span class="temp">${max}° / ${min}°</span>`;
-            forecastEl.appendChild(div);
+                const div = document.createElement('div');
+                div.className = 'forecast-item';
+                div.innerHTML = `<span class="day">${dayName}</span><span class="icon">${fInfo.icon}</span><span class="temp">${max}° / ${min}°</span>`;
+                forecastEl.appendChild(div);
+            }
         }
 
         // Notify 3D System (Stubbed)
@@ -223,10 +273,10 @@ function applyDayNightMode() {
     if (isNightMode) document.body.classList.add('night-mode');
     else document.body.classList.remove('night-mode');
 
-    if (window.matrixRain) window.matrixRain.setNightMode(isNightMode);
-    if (window.character3D) window.character3D.setNightMode(isNightMode);
-    if (window.matrixClock) window.matrixClock.setNightMode(isNightMode);
-    if (window.miniMatrixClock) window.miniMatrixClock.setNightMode(isNightMode);
+    if (window.matrixRain && window.matrixRain.setNightMode) window.matrixRain.setNightMode(isNightMode);
+    if (window.character3D && window.character3D.setNightMode) window.character3D.setNightMode(isNightMode);
+    if (window.matrixClock && window.matrixClock.setNightMode) window.matrixClock.setNightMode(isNightMode);
+    if (window.miniMatrixClock && window.miniMatrixClock.setNightMode) window.miniMatrixClock.setNightMode(isNightMode);
 }
 
 function getWeatherCodeInfo(code) {
@@ -242,6 +292,7 @@ function getWeatherCodeInfo(code) {
 // --- News ---
 async function fetchNews() {
     const list = document.getElementById('news-list');
+    if (!list) return;
     const topic = NEWS_TOPICS[currentNewsIndex];
     const country = COUNTRY_CONFIG[currentNewsCountry];
 
@@ -255,9 +306,6 @@ async function fetchNews() {
         url = CONFIG.NEWS_BASE_RSS.replace('{QUERY}', encodeURIComponent(query)).replace(/{HL}/g, country.hl).replace(/{GL}/g, country.gl);
     }
 
-    // Proxy through RSS2JSON (Free tier limit applies!)
-    // NOTE: In the private version we used a local Python proxy. For public web demo, we use a public API or you must host a backend.
-    // Making this client-side via rss2json for 'skeleton' simplicity.
     const apiUrl = `${CONFIG.RSS2JSON}${encodeURIComponent(url)}`;
 
     list.innerHTML = '<div class="loading-spinner">Loading news...</div>';
@@ -280,6 +328,8 @@ async function fetchNews() {
 
 function renderNews(items) {
     const list = document.getElementById('news-list');
+    if (!list) return;
+
     if (items && items.length > 0) {
         list.innerHTML = '';
         items.slice(0, 15).forEach(item => {
@@ -294,6 +344,8 @@ function renderNews(items) {
 // --- Finance ---
 async function fetchFinance() {
     const ticker = document.getElementById('finance-ticker');
+    if (!ticker) return;
+
     const baseCurrency = CONFIG.FINANCE_BASE;
     const monitoredList = CONFIG.FINANCE_MONITORED;
 
@@ -302,7 +354,6 @@ async function fetchFinance() {
     const monitoredCrypto = monitoredList.filter(c => CONFIG.CRYPTOS.find(x => x.symbol === c));
 
     // URLs relative to base
-    // Note: Frankfurter and CoinGecko logic similar to original, simplified error handling
     const items = [];
     const baseSymbol = CONFIG.CURRENCIES.find(c => c.code === baseCurrency)?.symbol || '$';
 
@@ -313,9 +364,6 @@ async function fetchFinance() {
             const data = await res.json();
             if (data.rates) {
                 monitoredFiat.forEach(code => {
-                    // Invert: 1 Base = X Target ? No, we want Price of Target in Base
-                    // Frankfurter ?from=USD&to=EUR -> 1 USD = 0.9 EUR. 
-                    // Price of 1 EUR in USD = 1/0.9 = 1.11 USD.
                     const rate = data.rates[code];
                     if (rate) items.push({ symbol: code, price: (1 / rate), prefix: baseSymbol });
                 });
@@ -374,7 +422,6 @@ function renderCalendar() {
     const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
 
     let html = `<div class="calendar-header"><span>${now.toLocaleString('default', { month: 'long' })} ${currentYear}</span></div><div class="calendar-grid">`;
-    // Simply render days 1..n for visual effect (simplified)
     for (let i = 1; i <= daysInMonth; i++) {
         const isToday = (i === now.getDate());
         html += `<div class="calendar-day ${isToday ? 'today' : ''}">${i}</div>`;
@@ -423,15 +470,17 @@ function setupWelcomeScreen() {
             currentNewsCountry = country;
 
             // Basic Geocoding
-            const res = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${city}&count=1`);
-            const data = await res.json();
-            if (data.results && data.results[0]) {
-                CONFIG.LAT = data.results[0].latitude;
-                CONFIG.LON = data.results[0].longitude;
-                CONFIG.LOCATION_NAME = `${data.results[0].name}, ${data.results[0].country_code}`;
-                saveSettings();
-                fetchWeather();
-            }
+            try {
+                const res = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${city}&count=1`);
+                const data = await res.json();
+                if (data.results && data.results[0]) {
+                    CONFIG.LAT = data.results[0].latitude;
+                    CONFIG.LON = data.results[0].longitude;
+                    CONFIG.LOCATION_NAME = `${data.results[0].name}, ${data.results[0].country_code}`;
+                    saveSettings();
+                    fetchWeather();
+                }
+            } catch (e) { console.error("Geocoding failed", e); }
 
             localStorage.setItem('op_welcome', 'true');
             modal.style.display = 'none';
@@ -459,22 +508,101 @@ function checkBedtime() {
     const [wh, wm] = bedtimeWake.split(':').map(Number);
     const sMin = sh * 60 + sm;
     const wMin = wh * 60 + wm;
-
-    // Check range...
-    // (omitted for brevity in skeleton, functionality retained in full version)
 }
 
-function setupNewsNavigation() {  /* ... */ }
-function setupNewsFullscreen() { /* ... */ }
-function setupVisionNavigation() { /* ... */ }
+function setupBedtime() {
+    /* Bedtime controls - simplified for skeleton */
+}
+
+function setupNewsNavigation() {
+    /* Simplified Nav Logic */
+}
+function setupNewsFullscreen() {
+    const btn = document.getElementById('fullscreen-news-btn');
+    const feed = document.querySelector('.news-feed');
+    if (btn && feed) {
+        btn.addEventListener('click', () => {
+            feed.classList.toggle('fullscreen-mode');
+            document.body.classList.toggle('news-fullscreen-active');
+        });
+    }
+}
+function setupVisionNavigation() {
+    const prevBtn = document.getElementById('vision-prev');
+    const nextBtn = document.getElementById('vision-next');
+    const title = document.getElementById('vision-title');
+    const searchInput = document.getElementById('youtube-search');
+
+    const views = [
+        { id: 'matrix-clock-view', title: 'ANALOG CLOCK' },
+        { id: 'youtube-player-view', title: "80'S TUBE VISION" },
+        { id: 'matrix-pet-view', title: 'CORE SYSTEM' }
+    ];
+
+    function updateView() {
+        views.forEach((v, i) => {
+            const el = document.getElementById(v.id);
+            if (el) {
+                el.classList.toggle('active', i === currentVisionIndex);
+            }
+        });
+        if (title) title.textContent = views[currentVisionIndex].title;
+
+        // Show search bar only for YouTube view
+        if (searchInput) {
+            searchInput.style.display = currentVisionIndex === 1 ? 'block' : 'none';
+        }
+
+        // Move Character3D canvas between mini and large containers
+        if (window.character3D) {
+            if (currentVisionIndex === 2) {
+                // Pet view active - move to large container
+                window.character3D.moveToContainer('character-3d-large');
+            } else {
+                // Other view - move back to mini container
+                window.character3D.moveToContainer('character-3d');
+            }
+        }
+    }
+
+    if (prevBtn) {
+        prevBtn.addEventListener('click', () => {
+            currentVisionIndex = (currentVisionIndex - 1 + views.length) % views.length;
+            updateView();
+        });
+    }
+
+    if (nextBtn) {
+        nextBtn.addEventListener('click', () => {
+            currentVisionIndex = (currentVisionIndex + 1) % views.length;
+            updateView();
+        });
+    }
+
+    // Initialize view
+    updateView();
+}
 function setupPetFullscreen() { /* ... */ }
-function setupYoutubeFullscreen() { /* ... */ }
+function setupYoutubeFullscreen() {
+    const btn = document.getElementById('fullscreen-youtube-btn');
+    const player = document.getElementById('youtube-player-view');
+    if (btn && player) {
+        btn.addEventListener('click', () => {
+            if (!document.fullscreenElement) player.requestFullscreen();
+            else document.exitFullscreen();
+        });
+    }
+}
 function setupSettings() {
     // Basic wiring for the settings panel
     const btn = document.getElementById('settings-btn');
     const panel = document.getElementById('settings-panel');
     const close = document.getElementById('settings-close');
-    if (btn) btn.addEventListener('click', () => panel.classList.toggle('active'));
-    if (close) close.addEventListener('click', () => panel.classList.remove('active'));
+    if (btn) {
+        btn.addEventListener('click', () => {
+            console.log("Settings Clicked"); // DEBUG
+            if (panel) panel.classList.toggle('active');
+        });
+    }
+    if (close && panel) close.addEventListener('click', () => panel.classList.remove('active'));
 }
-
