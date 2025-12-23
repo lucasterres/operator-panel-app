@@ -13,7 +13,7 @@
   </a>
 
   <h3>
-    <a href="https://operatorpanel.app/">🔴 LIVE APP DEMO</a>
+    <a href="https://operatorpanel.app/">🔴 LIVE DASHBOARD</a>
   </h3>
 </div>
 
