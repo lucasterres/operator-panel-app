@@ -19,6 +19,31 @@
 
 ---
 
+## 🚀 UPDATES (Live App)
+
+> **New:** 💨 **Wind Physics:** Real-time wind simulation! See the wind lines animation, plus rain & snow reacting to actual weather data.
+
+> **New:** ☁️ **Advanced Weather:** A complete overhaul of the cloud system! Now distinguishing between partly cloudy (small cumulus), overcast (dense white), storm (massive nimbus), and more with unique low-poly visuals.
+
+> **New:** 🎅 **Christmas Event:** Keep your eyes peeled on Dec 25th! A certain bearded guest might fly by... hope he watched out for the barn! 🛷✨
+
+> **New:** 🎉 **New Year's Eve:** A custom drone show and firework spectacle is cleared for takeoff! Watch the sky on Dec 31st at 23:59:50. 🎆🚁
+
+> **New:** 📰 **Immersive News:** Click the square icon in the news feed for a transparent, fullscreen Matrix experience! Auto-rotating topics with a dedicated clock. 🕶️
+
+---
+
+## 🕰️ The Living Clock (Live App)
+
+The Operator Panel features a **Living Clock** — a 3D world that reacts to time and weather. Here's how it works:
+
+- **🐾 Hourly Animals:** Every hour, a different animal walks across the scene to mark the time. Stay alert to spot them all!
+- **🦋 Half-Hour Insects:** Fireflies and butterflies (more insects coming soon!) appear at the 30-minute mark of each hour, alternating between species.
+- **✨ Random Events:** Special animations occur between the 15th and 45th minute of each hour, or at specific times.
+- **📅 Golden Calendar Days:** Look for dates marked in gold on the calendar above — they indicate special event days with unique animations (like Christmas and New Year's Eve)!
+
+---
+
 ## 💀 Why a Skeleton Version?
 This repository contains the **architectural skeleton** of the Operator Panel. 
 
@@ -26,7 +51,7 @@ This repository contains the **architectural skeleton** of the Operator Panel.
 The full "Live App" experience (available at [operatorpanel.app](https://operatorpanel.app/)) is designed to be full of **surprises, seasonal events, and hidden interactions**. To preserve the magic and prevent "spoilers" for our users, the proprietary assets (3D models, complex event logic, and audio) have been excluded from this open-source release.
 
 Instead, this repo provides:
-- The **complete Three.js + React/Vanilla JS integration**.
+- The **complete Three.js + Vanilla JS integration**.
 - A **reactive "Core" (Wireframe Sphere)** that demonstrates the interaction logic without revealing the characters.
 - The full **Weather, News, and Finance** systems.
 
