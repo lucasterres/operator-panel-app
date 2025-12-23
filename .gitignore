@@ -116,3 +116,8 @@ Thumbs.db
 # Private keys
 # config.js
 !config.example.js
+
+# Proprietary 3D Models - DO NOT COMMIT
+*.glb
+public/3dmodels/
+3dmodels/
