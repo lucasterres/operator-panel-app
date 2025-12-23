@@ -1,0 +1,20 @@
+{
+  "name": "operator-panel-app",
+  "version": "1.0.0",
+  "license": "MIT",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "rss-parser": "^3.13.0",
+    "suncalc": "^1.9.0",
+    "three": "^0.181.2"
+  },
+  "devDependencies": {
+    "electron": "^28.3.3",
+    "electron-builder": "^24.13.3",
+    "vite": "^5.0.0"
+  }
+}

@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<!-- Open Source Release -->
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Operator Panel</title>
+
+    <!-- Open Graph / Sharing -->
+    <meta property="og:title" content="Operator Panel" />
+    <meta property="og:site_name" content="Operator Panel" />
+    <meta property="og:description" content="Personal Cyberpunk Dashboard" />
+    <meta property="og:type" content="website" />
+
+    <link rel="manifest" href="/manifest.json">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Rajdhani:wght@500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="./style.css" />
+</head>
+
+<body>
+    <!-- Portrait Orientation Blocker -->
+    <div id="rotate-device" class="rotate-device-overlay">
+        <div class="rotate-content">
+            <div class="rotate-icon">
+                <span class="rotate-arrow">↻</span>
+            </div>
+            <h2>Rotate Your Device</h2>
+            <p>This dashboard is optimized for landscape mode</p>
+        </div>
+    </div>
+
+    <!-- Matrix Rain Background -->
+    <canvas id="matrix-canvas"></canvas>
+
+    <!-- Main Grid Layout -->
+    <main class="dashboard-grid">
+
+        <!-- Top Section: Date/Time & Weather -->
+        <header class="top-bar">
+            <div class="date-time-container GLASS">
+                <h1 id="clock" class="clock">00:00</h1>
+                <p id="date" class="date">Loading date...</p>
+            </div>
+
+            <div class="weather-container GLASS">
+                <!-- 1. Current Weather Info -->
+                <div class="weather-info">
+                    <div id="weather-current" class="weather-current">
+                        <span class="temp">--°C</span>
+                        <span class="condition">...</span>
+                    </div>
+                </div>
+
+                <!-- 2. Forecast (Middle) -->
+                <div id="weather-forecast" class="weather-forecast"></div>
+
+                <!-- 3. 3D Character Viewer (Right) -->
+                <div class="character-viewer">
+                    <!-- Mini 3D View (default) -->
+                    <div id="mini-3d-container" class="mini-view-container active">
+                        <div id="character-3d" class="character-3d-canvas"></div>
+                    </div>
+                    <!-- Mini Clock View (when Matrix Pet is active) -->
+                    <div id="mini-clock-container" class="mini-view-container">
+                        <canvas id="mini-clock-canvas"></canvas>
+                    </div>
+                    <div class="character-controls">
+                        <!-- Navigation buttons removed for simplified version if only one "pet" exists, but keeping structure -->
+                    </div>
+                    <div id="weather-status" class="weather-status"></div>
+                </div>
+
+                <!-- 4. Bedtime Controls -->
+                <div class="bedtime-controls">
+                    <div class="bedtime-row">
+                        <span class="bedtime-icon">🌙</span>
+                        <label>Sleep</label>
+                        <input type="time" id="bedtime-sleep" value="01:00">
+                    </div>
+                    <div class="bedtime-row">
+                        <span class="bedtime-icon">☀️</span>
+                        <label>Wake Up</label>
+                        <input type="time" id="bedtime-wake" value="09:00">
+                    </div>
+                    <div id="sleep-status" class="sleep-status"></div>
+                </div>
+            </div>
+
+            <div class="calendar-container GLASS" id="calendar-container">
+                <!-- Calendar rendered by JS -->
+            </div>
+        </header>
+
+        <!-- Center: News Feed & YouTube Player -->
+        <section class="content-area">
+            <!-- News Feed -->
+            <div class="news-feed GLASS">
+                <div class="news-header">
+                    <div class="news-title-nav">
+                        <button id="news-prev" class="nav-arrow" title="Previous">◀</button>
+                        <h2 id="news-title">Global News</h2>
+                        <button id="news-next" class="nav-arrow" title="Next">▶</button>
+                    </div>
+                    <div class="news-controls">
+                        <span class="news-source">Live Feed</span>
+                        <button id="fullscreen-news-btn" class="nav-arrow" title="Fullscreen">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                style="width: 16px; height: 16px;">
+                                <path
+                                    d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                <div id="news-fullscreen-clock" class="fullscreen-clock">00:00</div>
+                <div id="news-list" class="news-list">
+                    <div class="loading-spinner">Loading news...</div>
+                </div>
+            </div>
+
+            <!-- Matrix Vision (YouTube Player + Clock + Pet) -->
+            <div class="youtube-container GLASS">
+                <div class="youtube-header">
+                    <div class="matrix-vision-nav">
+                        <button id="vision-prev" class="nav-arrow" title="Previous">◀</button>
+                        <h2 id="vision-title">Matrix Clock</h2>
+                        <button id="vision-next" class="nav-arrow" title="Next">▶</button>
+                    </div>
+                    <input type="text" id="youtube-search" class="youtube-search" placeholder="Search video...">
+                </div>
+                <div id="youtube-player-wrapper" class="youtube-player-wrapper">
+                    <div class="crt-overlay"></div>
+                    <!-- Matrix Clock View -->
+                    <div id="matrix-clock-view" class="matrix-view active">
+                        <canvas id="matrix-clock-canvas"></canvas>
+                    </div>
+                    <!-- YouTube Player View -->
+                    <div id="youtube-player-view" class="matrix-view">
+                        <button id="fullscreen-youtube-btn" class="fullscreen-btn" title="Fullscreen">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path
+                                    d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3" />
+                            </svg>
+                        </button>
+                        <div id="youtube-player"></div>
+                    </div>
+                    <!-- Matrix Pet View (Large 3D) -->
+                    <div id="matrix-pet-view" class="matrix-view">
+                        <button id="fullscreen-pet-btn" class="fullscreen-btn" title="Fullscreen">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path
+                                    d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3" />
+                            </svg>
+                        </button>
+                        <div id="character-3d-large" class="character-3d-large"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Bottom: Finance Ticker -->
+        <footer class="finance-ticker-container GLASS-DARK">
+            <div class="ticker-wrap">
+                <div id="finance-ticker" class="ticker-move">
+                    <span class="ticker-item">Initializing Ticker...</span>
+                </div>
+            </div>
+        </footer>
+
+        <!-- Floating Controls (About & Settings) -->
+        <div class="controls-container">
+            <button id="about-btn" class="control-btn" title="About">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                </svg>
+            </button>
+
+            <button id="settings-btn" class="control-btn" title="Settings">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="3" />
+                    <path
+                        d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83" />
+                </svg>
+            </button>
+        </div>
+
+        <!-- About Modal -->
+        <div id="about-modal" class="modal-overlay" style="display: none;">
+            <div class="modal-content GLASS-DARK about-modal-content">
+                <button id="about-close" class="modal-close-btn">✕</button>
+                <div class="about-scroll-content">
+                    <h2 class="welcome-title">ABOUT THE PROJECT</h2>
+                    <p class="about-intro">
+                        An open-source interactive dashboard for secondary monitors.
+                        <br>
+                        <a href="https://operatorpanel.app/" target="_blank"
+                            style="color: var(--matrix-green);">operatorpanel.app</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Settings Panel -->
+        <div id="settings-panel" class="settings-panel">
+            <div class="settings-header">
+                <h3>⚙️ Settings</h3>
+                <button id="settings-close" class="settings-close">✕</button>
+            </div>
+
+            <div class="settings-section">
+                <h4>🏙️ City / Weather Location</h4>
+                <div class="city-input-container">
+                    <input type="text" id="weather-city-input" class="settings-input" placeholder="Enter city name...">
+                    <button id="weather-city-search" class="settings-action-btn">Search</button>
+                </div>
+                <small id="weather-city-status" class="api-hint">Current: London, UK</small>
+            </div>
+
+            <div class="settings-section">
+                <h4>🌍 News Country</h4>
+                <select id="news-country-select" class="settings-select"></select>
+            </div>
+
+            <div class="settings-section">
+                <h4>📰 News Topics</h4>
+                <div class="theme-options" id="news-themes-container"></div>
+            </div>
+
+            <div class="settings-section">
+                <h4>💰 Currency Ticker</h4>
+                <div class="input-group">
+                    <label>Home Currency (Unit):</label>
+                    <select id="finance-base-select" class="settings-select"></select>
+                </div>
+
+                <div class="finance-monitored-section">
+                    <label>Monitored Currencies:</label>
+                    <div id="finance-monitored-container" class="theme-options"></div>
+                </div>
+            </div>
+
+            <div class="settings-section">
+                <h4>🎬 YouTube API Key</h4>
+                <div class="api-key-input-container">
+                    <input type="password" id="youtube-api-key" class="settings-input"
+                        placeholder="Paste your API Key here...">
+                    <button type="button" id="toggle-api-key" class="eye-toggle" title="Show/Hide">👁️</button>
+                    <button type="button" id="save-api-key" class="settings-action-btn"
+                        title="Save API Key">Save</button>
+                </div>
+                <small id="api-key-status" class="api-hint">Get it from: <a href="https://console.cloud.google.com/"
+                        target="_blank">Google Cloud Console</a></small>
+            </div>
+
+            <div class="settings-section">
+                <h4>🎵 Initial Video/Playlist</h4>
+                <div class="api-key-input-container">
+                    <input type="text" id="youtube-initial-video" class="settings-input"
+                        placeholder="Paste YouTube link or playlist ID...">
+                    <button type="button" id="save-initial-video" class="settings-action-btn"
+                        title="Save Video">Save</button>
+                </div>
+            </div>
+        </div>
+
+    </main>
+    <!-- Welcome / Setup Modal -->
+    <div id="welcome-modal" class="welcome-overlay" style="display: none;">
+        <div class="welcome-content GLASS-DARK">
+            <h1 class="welcome-title">INITIALIZING OPERATOR PANEL...</h1>
+
+            <div class="welcome-body-text">
+                <p>
+                    Welcome to the <strong>Operator Panel</strong>. This is your digital command center for local
+                    weather
+                    monitoring and a unique 3D environment.
+                </p>
+            </div>
+
+            <div class="welcome-setup">
+                <h3>SYSTEM CONFIGURATION</h3>
+
+                <div class="input-group">
+                    <label for="setup-city">📍 Weather City:</label>
+                    <input type="text" id="setup-city" class="matrix-input" placeholder="e.g. London" value="London">
+                </div>
+
+                <div class="input-group">
+                    <label for="setup-country">🌍 News Source:</label>
+                    <select id="setup-country" class="matrix-select"></select>
+                </div>
+
+                <button id="initialize-system-btn" class="matrix-btn">
+                    INITIALIZE SYSTEM
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="/main.js"></script>
+</body>
+
+</html>
