@@ -21,15 +21,13 @@
 
 ## 🚀 UPDATES (Live App)
 
-> **New:** 💨 **Wind Physics:** Real-time wind simulation! See the wind lines animation, plus rain & snow reacting to actual weather data.
-
-> **New:** ☁️ **Advanced Weather:** A complete overhaul of the cloud system! Now distinguishing between partly cloudy (small cumulus), overcast (dense white), storm (massive nimbus), and more with unique low-poly visuals.
-
-> **New:** 🎅 **Christmas Event:** Keep your eyes peeled on Dec 25th! A certain bearded guest might fly by... hope he watched out for the barn! 🛷✨
-
-> **New:** 🎉 **New Year's Eve:** A custom drone show and firework spectacle is cleared for takeoff! Watch the sky on Dec 31st at 23:59:50. 🎆🚁
-
-> **New:** 📰 **Immersive News:** Click the square icon in the news feed for a transparent, fullscreen Matrix experience! Auto-rotating topics with a dedicated clock. 🕶️
+- 🏠 **Barn with Clock** — The shelter now features a fully functional wireframe clock on the facade, synchronized with real time!
+- 🌳 **Seasonal Tree Models** — All-new tree models for each season: lush greens for summer, vibrant oranges for autumn, bare branches for winter, and blooming flowers for spring.
+- 💨 **Wind Physics** — Real-time wind simulation with animated wind lines, plus rain & snow reacting to actual weather data.
+- ☁️ **Advanced Weather** — Complete cloud system overhaul distinguishing between partly cloudy, overcast, and storm conditions with unique low-poly visuals.
+- 🎅 **Christmas Event** — A special guest flies by on Dec 25th!
+- 🎉 **New Year's Eve** — Drone show and firework spectacle on Dec 31st at 23:59:50.
+- 📰 **Immersive News** — Fullscreen Matrix-style news experience with auto-rotating topics.
 
 ---
 
