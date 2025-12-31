@@ -21,15 +21,16 @@
 
 ## 🚀 UPDATES (Live App)
 
-New: 🐾 **Pet Models V2:** All original pets have been upgraded with new, detailed models—Llama, Cow, Donkey, Horse, and Shiba Inu now look better than ever!
-New: 💾 **Pet Memory:** Your selected pet is now saved! When you return, your favorite companion will be waiting for you.
-New: 🏠 **Barn with Clock:** The shelter now features a fully functional wireframe clock on the facade, synchronized with real time!
-New: 🌳 **Seasonal Tree Models:** All-new tree models for each season—lush greens for summer, vibrant oranges for autumn, bare branches for winter, and blooming flowers for spring.
-💨 **Wind Physics:** Real-time wind simulation! See the wind lines animation, plus rain & snow reacting to actual weather data.
-☁️ **Advanced Weather:** A complete overhaul of the cloud system! Now distinguishing between partly cloudy (small cumulus), overcast (dense white), storm (massive nimbus), and more with unique low-poly visuals.
-🎅 **Christmas Event:** Keep your eyes peeled on Dec 25th! A certain bearded guest might fly by... hope he watched out for the barn! 🛷✨
-🎉 **New Year's Eve:** A custom drone show and firework spectacle is cleared for takeoff! Watch the sky on Dec 31st at 23:59:50. 🎆🚁
-📰 **Immersive News:** Click the square icon in the news feed for a transparent, fullscreen Matrix experience! Auto-rotating topics with a dedicated clock. 🕶️
+🐾 Pet Models V2: All original pets have been upgraded with new, detailed models—Llama, Cow, Donkey, Horse, and Shiba Inu now look better than ever!
+💾 Pet Memory: Your selected pet is now saved! When you return, your favorite companion will be waiting for you.
+🏠 Barn with Clock: The shelter now features a fully functional wireframe clock on the facade, synchronized with real time!
+🌳 Seasonal Tree Models: All-new tree models for each season—lush greens for summer, vibrant oranges for autumn, bare branches for winter, and blooming flowers for spring.
+💨 Wind Physics: Real-time wind simulation! See the wind lines animation, plus rain & snow reacting to actual weather data.
+☁️ Advanced Weather: A complete overhaul of the cloud system! Now distinguishing between partly cloudy (small cumulus), overcast (dense white), storm (massive nimbus), and more with unique low-poly visuals.
+🎅 Christmas Event: Keep your eyes peeled on Dec 25th! A certain bearded guest might fly by... hope he watched out for the barn! 🛷✨
+🎉 New Year's Eve: A custom drone show and firework spectacle is cleared for takeoff! Watch the sky on Dec 31st at 23:59:50. 🎆🚁
+📰 Immersive News: Click the square icon in the news feed for a transparent, fullscreen Matrix experience! Auto-rotating topics with a dedicated clock. 🕶️
+
 
 ---
 
