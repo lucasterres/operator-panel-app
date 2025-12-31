@@ -23,6 +23,8 @@
 
 ## 🚀 Latest Updates
 
+- 🐷 **New Pets:** Meet Pig and Cookie (Wirehaired Dachshund)—two adorable new companions to join your farm!
+
 - 🐾 **Pet Models V2:** All original pets have been upgraded with fresh, detailed 3D models—Llama, Cow, Donkey, Horse, and Shiba Inu!
 
 - 💾 **Pet Memory:** Your selected pet is now saved! When you return, your favorite companion will be waiting for you.
