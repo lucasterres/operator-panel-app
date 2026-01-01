@@ -23,6 +23,19 @@
 
 ## 🚀 Latest Updates
 
+### 🔔 Visual Alarm System
+Set a wake-up alarm with **dramatic red flashing effects**! When the alarm triggers, the entire dashboard transforms:
+- **Matrix Rain** turns red 🔴
+- **3D Pet sky** flashes red
+- **Fullscreen news** gets a complete red theme
+- **Pulsing alarm overlay** with shaking bell icon
+**Features:**
+- Set custom alarm time
+- Toggle ON/OFF with one click  
+- All settings are automatically saved
+- Auto-stops after 1 minute or manual stop
+- Works with the timezone-synced dashboard clock
+  
 - 🐷 **New Pets:** Meet Pig and Cookie (Wirehaired Dachshund)—two adorable new companions to join your farm!
 
 - 🐾 **Pet Models V2:** All original pets have been upgraded with fresh, detailed 3D models—Llama, Cow, Donkey, Horse, and Shiba Inu!
